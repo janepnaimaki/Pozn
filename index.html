@@ -40,7 +40,6 @@ button{
 
 .small{ color:gray; }
 
-/* ===== MENU STYL ===== */
 .category-box{
     background:#eee;
     margin:8px 0;
@@ -68,6 +67,14 @@ button{
     padding:3px 0;
     font-size:14px;
 }
+
+img{
+    max-width:100%;
+    max-height:300px;
+    margin:10px auto;
+    display:block;
+    border-radius:10px;
+}
 </style>
 </head>
 
@@ -85,7 +92,6 @@ button{
 <div id="settings" style="display:none; text-align:left;">
 
 <h3>Výběr kategorií</h3>
-
 <div id="selector"></div>
 
 <h3>Režim</h3>
@@ -104,6 +110,8 @@ button{
 <div class="card">
 
 <h2>Poznáváčka</h2>
+
+<img id="img">
 
 <p class="small" id="category"></p>
 
@@ -175,18 +183,18 @@ const data = [
 {name:"muchomůrka zelená", category:"Houby", image:"images/Houby/muchomurka_zelena.jpg"},
 {name:"václavka", category:"Houby", image:"images/Houby/vaclavka.jpg"},
 
-{name:"krásivka", category:"Řasy", image:"images/Řasy/krásivka.jpg"},
-{name:"parožnatka", category:"Řasy", image:"images/Řasy/paroznatka.jpg"},
-{name:"pláštěnka", category:"Řasy", image:"images/Řasy/plastenka.jpg"},
-{name:"řasokoule", category:"Řasy", image:"images/Řasy/rasokoule.jpg"},
-{name:"šroubatka", category:"Řasy", image:"images/Řasy/sroubatka.jpg"},
-{name:"zelenivka", category:"Řasy", image:"images/Řasy/zelenivka.jpg"},
-{name:"zrněnka", category:"Řasy", image:"images/Řasy/zrnenka.jpg"},
-{name:"žabí vlas", category:"Řasy", image:"images/Řasy/zabi_vlas.jpg"}
+{name:"krásivka", category:"Řasy", image:"images/Rasy/krásivka.jpg"},
+{name:"parožnatka", category:"Řasy", image:"images/Rasy/paroznatka.jpg"},
+{name:"pláštěnka", category:"Řasy", image:"images/Rasy/plastenka.jpg"},
+{name:"řasokoule", category:"Řasy", image:"images/Rasy/rasokoule.jpg"},
+{name:"šroubatka", category:"Řasy", image:"images/Rasy/sroubatka.jpg"},
+{name:"zelenivka", category:"Řasy", image:"images/Rasy/zelenivka.jpg"},
+{name:"zrněnka", category:"Řasy", image:"images/Rasy/zrnenka.jpg"},
+{name:"žabí vlas", category:"Řasy", image:"images/Rasy/zabi_vlas.jpg"}
 ];
 
-// ===== STAV =====
-let filtered = [];
+// ===== STATE =====
+let filtered = data;
 let current = null;
 let index = 0;
 
@@ -195,7 +203,7 @@ let total = 0;
 
 let mode = "random";
 
-// ===== NORMALIZACE =====
+// ===== NORMALIZE =====
 function normalize(t){
     return t.toLowerCase()
     .normalize("NFD")
@@ -203,7 +211,7 @@ function normalize(t){
     .trim();
 }
 
-// ===== MENU VÝROBA =====
+// ===== BUILD MENU =====
 function buildSelector(){
 
     let container = document.getElementById("selector");
@@ -217,8 +225,6 @@ function buildSelector(){
     });
 
     for(let cat in groups){
-
-        let allChecked = groups[cat].map(x => x.name);
 
         let box = document.createElement("div");
         box.className = "category-box";
@@ -243,24 +249,19 @@ function buildSelector(){
     }
 }
 
-// ===== TOGGLE CELÉ KATEGORIE =====
-function toggleGroup(master, category){
-
+// ===== CATEGORY TOGGLE =====
+function toggleGroup(master){
     let box = master.closest(".category-box");
     let checks = box.querySelectorAll("input[type=checkbox]:not(:first-child)");
-
-    checks.forEach(c=>{
-        c.checked = master.checked;
-    });
+    checks.forEach(c=>c.checked = master.checked);
 }
 
-// ===== ZOBRAZENÍ / SKRYTÍ DETAILU =====
 function toggleCategory(el){
     let list = el.closest(".category-box").querySelector(".org-list");
     list.style.display = (list.style.display === "none") ? "block" : "none";
 }
 
-// ===== NASTAVENÍ =====
+// ===== APPLY =====
 function applySettings(){
 
     let checks = document.querySelectorAll("#selector .org-item input");
@@ -274,11 +275,6 @@ function applySettings(){
 
     mode = document.getElementById("mode").value;
 
-    if(filtered.length === 0){
-        alert("Vyber aspoň jeden organismus!");
-        return;
-    }
-
     score = 0;
     total = 0;
     index = 0;
@@ -287,29 +283,24 @@ function applySettings(){
     next();
 }
 
-// ===== MENU =====
-function toggleSettings(){
-    let s = document.getElementById("settings");
-    s.style.display = (s.style.display === "none" || s.style.display === "") ? "block" : "none";
-}
-
-// ===== DALŠÍ =====
+// ===== NEXT =====
 function next(){
 
     if(mode === "random"){
-        current = filtered[Math.floor(Math.random() * filtered.length)];
-    }else{
+        current = filtered[Math.floor(Math.random()*filtered.length)];
+    } else {
         current = filtered[index];
         index++;
         if(index >= filtered.length) index = 0;
     }
 
+    document.getElementById("img").src = current.image;
     document.getElementById("category").textContent = current.category;
     document.getElementById("answer").value = "";
     document.getElementById("result").textContent = "";
 }
 
-// ===== KONTROLA =====
+// ===== CHECK =====
 function check(){
     let user = normalize(document.getElementById("answer").value);
     let correct = normalize(current.name);
@@ -319,20 +310,18 @@ function check(){
     if(user === correct){
         score++;
         document.getElementById("result").textContent = "✅ Správně";
-    }else{
-        document.getElementById("result").textContent =
-            "❌ Správně bylo: " + current.name;
+    } else {
+        document.getElementById("result").textContent = "❌ Správně: " + current.name;
     }
 
     updateScore();
     setTimeout(next, 600);
 }
 
-// ===== NEVÍM =====
+// ===== SKIP =====
 function skip(){
     total++;
-    document.getElementById("result").textContent =
-        "➡️ Správně: " + current.name;
+    document.getElementById("result").textContent = "➡️ Správně: " + current.name;
 
     updateScore();
     setTimeout(next, 600);
