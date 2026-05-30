@@ -132,6 +132,14 @@ img{
 
 <script>
 
+// ===== NORMALIZE =====
+function normalize(t){
+    return t.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
+}
+
 // ===== DATA =====
 const data = [
 {name:"Anabaena", category:"Sinice", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Sinice/anabaena.jpg"},
@@ -142,7 +150,7 @@ const data = [
 {name:"bobovka", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/bobovka.jpg"},
 {name:"bobulák", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/bobulak.jpg"},
 {name:"hroznovice", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/hroznovice.jpg"},
-{name:"keřenka", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/keřenka.jpg"},
+{name:"keřenka", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/kerenka.jpg"},
 {name:"kokcidie", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/kokcidie.jpg"},
 {name:"krásnoočko", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/krásnoocko.jpg"},
 {name:"lamblie", category:"Protista", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Protista/lamblie.jpg"},
@@ -183,7 +191,7 @@ const data = [
 {name:"muchomůrka zelená", category:"Houby", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Houby/muchomurka_zelena.jpg"},
 {name:"václavka", category:"Houby", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Houby/vaclavka.jpg"},
 
-{name:"krásivka", category:"Řasy", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Rasy/krásivka.jpg"},
+{name:"krásivka", category:"Řasy", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Rasy/krasivka.jpg"},
 {name:"parožnatka", category:"Řasy", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Rasy/paroznatka.jpg"},
 {name:"pláštěnka", category:"Řasy", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Rasy/plastenka.jpg"},
 {name:"řasokoule", category:"Řasy", image:"https://raw.githubusercontent.com/janepnaimaki/Pozn/main/images/Rasy/rasokoule.jpg"},
@@ -202,14 +210,6 @@ let score = 0;
 let total = 0;
 
 let mode = "random";
-
-// ===== NORMALIZE =====
-function normalize(t){
-    return t.toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .trim();
-}
 
 // ===== TOGGLE SETTINGS =====
 function toggleSettings(){
