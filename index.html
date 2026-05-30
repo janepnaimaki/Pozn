@@ -211,6 +211,12 @@ function normalize(t){
     .trim();
 }
 
+// ===== TOGGLE SETTINGS =====
+function toggleSettings(){
+    let settings = document.getElementById("settings");
+    settings.style.display = (settings.style.display === "none") ? "block" : "none";
+}
+
 // ===== BUILD MENU =====
 function buildSelector(){
 
