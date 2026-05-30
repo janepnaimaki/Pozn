@@ -40,33 +40,12 @@ button{
 
 .small{ color:gray; }
 
-/* ===== MENU STYL ===== */
-.category-box{
-    background:#eee;
-    margin:8px 0;
-    border-radius:8px;
-    padding:10px;
-    text-align:left;
-}
-
-.category-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.org-list{
-    margin-top:8px;
-    padding-left:10px;
-}
-
-.org-item{
-    display:flex;
-    justify-content:space-between;
-    padding:3px 0;
-    font-size:14px;
+img{
+    max-width:100%;
+    max-height:300px;
+    margin:10px auto;
+    display:block;
+    border-radius:10px;
 }
 </style>
 </head>
@@ -83,11 +62,6 @@ button{
 <button onclick="restart()">🔄 Restart</button>
 
 <div id="settings" style="display:none; text-align:left;">
-
-<h3>Výběr kategorií</h3>
-
-<div id="selector"></div>
-
 <h3>Režim</h3>
 <select id="mode">
     <option value="random">Náhodně</option>
@@ -96,7 +70,6 @@ button{
 
 <br><br>
 <button onclick="applySettings()">Použít</button>
-
 </div>
 
 </div>
@@ -104,6 +77,8 @@ button{
 <div class="card">
 
 <h2>Poznáváčka</h2>
+
+<img id="img" src="" alt="obrázek">
 
 <p class="small" id="category"></p>
 
@@ -124,30 +99,17 @@ button{
 
 <script>
 
-// ===== DATA =====
+// ===== DATA (SEM DOPLNÍME OBRAZKY) =====
 const data = [
-{name:"Anabaena", category:"Sinice"},
-{name:"drkalka", category:"Sinice"},
-{name:"sinivka", category:"Sinice"},
+{name:"Anabaena", category:"Sinice", image:"images/Sinice/anabaena.jpg"},
+{name:"sinivka", category:"Sinice", image:"images/Sinice/sinivka.jpg"},
 
-{name:"bachořec", category:"Protista"},
-{name:"bobovka", category:"Protista"},
-{name:"bobulák", category:"Protista"},
-{name:"trepka", category:"Protista"},
-
-{name:"bedla", category:"Houby"},
-{name:"čirůvka", category:"Houby"},
-{name:"dřevomorka", category:"Houby"},
-{name:"hlíva ústřičná", category:"Houby"},
-{name:"hřib pravý", category:"Houby"},
-
-{name:"krásivka", category:"Řasy"},
-{name:"řasokoule", category:"Řasy"},
-{name:"šroubatka", category:"Řasy"}
+{name:"trepka", category:"Protista", image:"images/Protista/trepka.jpg"},
+{name:"lamblie", category:"Protista", image:"images/Protista/lamblie.jpg"}
 ];
 
 // ===== STAV =====
-let filtered = [];
+let filtered = data;
 let current = null;
 let index = 0;
 
@@ -164,87 +126,9 @@ function normalize(t){
     .trim();
 }
 
-// ===== MENU VÝROBA =====
-function buildSelector(){
-
-    let container = document.getElementById("selector");
-    container.innerHTML = "";
-
-    let groups = {};
-
-    data.forEach(d=>{
-        if(!groups[d.category]) groups[d.category] = [];
-        groups[d.category].push(d);
-    });
-
-    for(let cat in groups){
-
-        let allChecked = groups[cat].map(x => x.name);
-
-        let box = document.createElement("div");
-        box.className = "category-box";
-
-        box.innerHTML = `
-        <div class="category-header">
-            <span onclick="toggleCategory(this)">${cat}</span>
-            <input type="checkbox" checked onchange="toggleGroup(this,'${cat}')">
-        </div>
-
-        <div class="org-list">
-            ${groups[cat].map(o=>`
-                <div class="org-item">
-                    <span>${o.name}</span>
-                    <input type="checkbox" value="${o.name}" checked>
-                </div>
-            `).join("")}
-        </div>
-        `;
-
-        container.appendChild(box);
-    }
-}
-
-// ===== TOGGLE CELÉ KATEGORIE =====
-function toggleGroup(master, category){
-
-    let box = master.closest(".category-box");
-    let checks = box.querySelectorAll("input[type=checkbox]:not(:first-child)");
-
-    checks.forEach(c=>{
-        c.checked = master.checked;
-    });
-}
-
-// ===== ZOBRAZENÍ / SKRYTÍ DETAILU =====
-function toggleCategory(el){
-    let list = el.closest(".category-box").querySelector(".org-list");
-    list.style.display = (list.style.display === "none") ? "block" : "none";
-}
-
-// ===== NASTAVENÍ =====
+// ===== START / SETTINGS =====
 function applySettings(){
-
-    let checks = document.querySelectorAll("#selector .org-item input");
-    let selected = [];
-
-    checks.forEach(c=>{
-        if(c.checked) selected.push(c.value);
-    });
-
-    filtered = data.filter(d => selected.includes(d.name));
-
     mode = document.getElementById("mode").value;
-
-    if(filtered.length === 0){
-        alert("Vyber aspoň jeden organismus!");
-        return;
-    }
-
-    score = 0;
-    total = 0;
-    index = 0;
-
-    updateScore();
     next();
 }
 
@@ -254,7 +138,7 @@ function toggleSettings(){
     s.style.display = (s.style.display === "none" || s.style.display === "") ? "block" : "none";
 }
 
-// ===== DALŠÍ =====
+// ===== DALŠÍ OTÁZKA =====
 function next(){
 
     if(mode === "random"){
@@ -265,6 +149,7 @@ function next(){
         if(index >= filtered.length) index = 0;
     }
 
+    document.getElementById("img").src = current.image;
     document.getElementById("category").textContent = current.category;
     document.getElementById("answer").value = "";
     document.getElementById("result").textContent = "";
@@ -282,11 +167,11 @@ function check(){
         document.getElementById("result").textContent = "✅ Správně";
     }else{
         document.getElementById("result").textContent =
-            "❌ Správně bylo: " + current.name;
+            "❌ Správně: " + current.name;
     }
 
     updateScore();
-    setTimeout(next, 600);
+    setTimeout(next, 700);
 }
 
 // ===== NEVÍM =====
@@ -296,7 +181,7 @@ function skip(){
         "➡️ Správně: " + current.name;
 
     updateScore();
-    setTimeout(next, 600);
+    setTimeout(next, 700);
 }
 
 // ===== RESET =====
@@ -313,8 +198,6 @@ function updateScore(){
     document.getElementById("total").textContent = total;
 }
 
-// START
-buildSelector();
 applySettings();
 
 </script>
