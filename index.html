@@ -36,6 +36,7 @@ button{
     padding:8px 12px;
     margin:5px;
     cursor:pointer;
+    border-radius:8px;
 }
 
 .small{ color:gray; }
@@ -312,6 +313,9 @@ function applySettings(){
 
     updateScore();
     next();
+    
+    // Close settings
+    document.getElementById("settings").style.display = "none";
 }
 
 // ===== NEXT =====
