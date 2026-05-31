@@ -34,6 +34,12 @@ body{
     margin:0;
     padding:20px;
     transition: background 0.3s, color 0.3s;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 .container{
@@ -155,10 +161,30 @@ button{
     display:none;
     max-height:400px;
     overflow-y:auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-border) var(--category-bg);
 }
 
 .org-list.open{
     display:block;
+}
+
+.org-list::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.org-list::-webkit-scrollbar-track {
+    background: var(--category-bg);
+}
+
+.org-list::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 5px;
+}
+
+.org-list::-webkit-scrollbar-thumb:hover {
+    background: #777;
 }
 
 .org-item{
@@ -198,40 +224,6 @@ img{
 
 .dark-mode-toggle:hover{
     transform:scale(1.1);
-}
-/* ===== DARK MODE SCROLLBARS ===== */
-
-body::-webkit-scrollbar,
-.org-list::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-body::-webkit-scrollbar-track,
-.org-list::-webkit-scrollbar-track {
-    background: var(--bg-color);
-}
-
-body::-webkit-scrollbar-thumb,
-.org-list::-webkit-scrollbar-thumb {
-    background: var(--card-border);
-    border-radius: 5px;
-}
-
-body::-webkit-scrollbar-thumb:hover,
-.org-list::-webkit-scrollbar-thumb:hover {
-    background: #777;
-}
-
-/* Firefox */
-html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--card-border) var(--bg-color);
-}
-
-.org-list {
-    scrollbar-width: thin;
-    scrollbar-color: var(--card-border) var(--category-bg);
 }
 </style>
 </head>
@@ -306,7 +298,6 @@ function updateDarkModeButton(){
     btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 }
 
-// Load dark mode preference on page load
 if(localStorage.getItem('darkMode') === 'true'){
     document.body.classList.add('dark-mode');
     updateDarkModeButton();
@@ -425,39 +416,29 @@ function toggleSettings(){
 // ===== SET MODE =====
 function setMode(newMode){
     mode = newMode;
-    
-    // Update button highlighting
     let buttons = document.querySelectorAll(".mode-button");
     buttons.forEach(btn => btn.classList.remove("active"));
-    
     event.target.classList.add("active");
 }
 
 // ===== BUILD MENU =====
 function buildSelector(){
-
     let container = document.getElementById("selector");
     container.innerHTML = "";
-
     let groups = {};
-
     data.forEach(d=>{
         if(!groups[d.category]) groups[d.category] = [];
         groups[d.category].push(d);
     });
-
     for(let cat in groups){
-
         let box = document.createElement("div");
         box.className = "category-box";
-
         let itemsHtml = groups[cat].map(o=>`
             <div class="org-item">
                 <input type="checkbox" value="${o.name}" checked>
                 <span>${o.name}</span>
             </div>
         `).join("");
-
         box.innerHTML = `
         <div class="category-header" onclick="toggleCategoryList(event)">
             <span class="arrow">▶</span>
@@ -468,20 +449,16 @@ function buildSelector(){
             ${itemsHtml}
         </div>
         `;
-
         container.appendChild(box);
     }
 }
 
 // ===== CATEGORY TOGGLE =====
 function toggleCategoryList(event){
-    // Only toggle if clicking on arrow or category name, not the checkbox
     if(event.target.closest('.category-checkbox')) return;
-    
     let box = event.currentTarget.closest(".category-box");
     let list = box.querySelector(".org-list");
     let arrow = box.querySelector(".arrow");
-    
     list.classList.toggle("open");
     arrow.classList.toggle("open");
 }
@@ -494,30 +471,22 @@ function toggleGroup(event){
 
 // ===== APPLY =====
 function applySettings(){
-
     let checks = document.querySelectorAll("#selector .org-item input");
     let selected = [];
-
     checks.forEach(c=>{
         if(c.checked) selected.push(c.value);
     });
-
     filtered = data.filter(d => selected.includes(d.name));
-
     score = 0;
     total = 0;
     index = 0;
-
     updateScore();
     next();
-    
-    // Close settings
     document.getElementById("settings").style.display = "none";
 }
 
 // ===== NEXT =====
 function next(){
-
     if(mode === "random"){
         current = filtered[Math.floor(Math.random()*filtered.length)];
     } else {
@@ -525,7 +494,6 @@ function next(){
         index++;
         if(index >= filtered.length) index = 0;
     }
-
     document.getElementById("img").src = current.image;
     document.getElementById("category").textContent = current.category;
     document.getElementById("answer").value = "";
@@ -536,16 +504,13 @@ function next(){
 function check(){
     let user = normalize(document.getElementById("answer").value);
     let correct = normalize(current.name);
-
     total++;
-
     if(user === correct){
         score++;
         document.getElementById("result").textContent = "✅ Správně";
     } else {
         document.getElementById("result").textContent = "❌ Správně: " + current.name;
     }
-
     updateScore();
     setTimeout(next, 600);
 }
@@ -554,7 +519,6 @@ function check(){
 function skip(){
     total++;
     document.getElementById("result").textContent = "➡️ Správně: " + current.name;
-
     updateScore();
     setTimeout(next, 600);
 }
