@@ -6,12 +6,34 @@
 <title>Poznáváčka</title>
 
 <style>
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #000;
+    --card-bg: white;
+    --card-border: #ccc;
+    --input-bg: white;
+    --input-text: #000;
+    --category-bg: #eee;
+}
+
+body.dark-mode {
+    --bg-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --card-bg: #2d2d2d;
+    --card-border: #444;
+    --input-bg: #3d3d3d;
+    --input-text: #e0e0e0;
+    --category-bg: #3d3d3d;
+}
+
 body{
     font-family: Arial;
     text-align:center;
-    background:#f5f5f5;
+    background:var(--bg-color);
+    color:var(--text-color);
     margin:0;
     padding:20px;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container{
@@ -20,16 +42,22 @@ body{
 }
 
 .card{
-    background:white;
+    background:var(--card-bg);
     padding:20px;
     border-radius:10px;
     margin-top:10px;
+    transition: background 0.3s;
 }
 
 input{
     padding:8px;
     width:80%;
     margin-top:10px;
+    background:var(--input-bg);
+    color:var(--input-text);
+    border:1px solid var(--card-border);
+    border-radius:5px;
+    transition: background 0.3s, color 0.3s;
 }
 
 button{
@@ -37,6 +65,21 @@ button{
     margin:5px;
     cursor:pointer;
     border-radius:8px;
+    background:var(--card-bg);
+    color:var(--text-color);
+    border:1px solid var(--card-border);
+    transition: background 0.3s, color 0.3s;
+}
+
+.top-buttons{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:10px;
+}
+
+.top-buttons button{
+    flex:1;
 }
 
 .mode-buttons{
@@ -48,8 +91,9 @@ button{
 
 .mode-button{
     padding:10px 20px;
-    border:2px solid #ccc;
-    background:white;
+    border:2px solid var(--card-border);
+    background:var(--card-bg);
+    color:var(--text-color);
     cursor:pointer;
     border-radius:8px;
     font-size:14px;
@@ -62,14 +106,16 @@ button{
     border-color:#45a049;
 }
 
-.small{ color:gray; }
+.small{ color:var(--text-color); opacity:0.7; }
 
 .category-box{
-    background:#eee;
+    background:var(--category-bg);
     margin:8px 0;
     border-radius:8px;
     padding:10px;
     text-align:left;
+    border:1px solid var(--card-border);
+    transition: background 0.3s;
 }
 
 .category-header{
@@ -99,10 +145,30 @@ img{
     display:block;
     border-radius:10px;
 }
+
+.dark-mode-toggle{
+    position:fixed;
+    top:20px;
+    right:20px;
+    padding:8px 12px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    background:var(--card-bg);
+    color:var(--text-color);
+    font-size:18px;
+    transition: all 0.3s;
+}
+
+.dark-mode-toggle:hover{
+    transform:scale(1.1);
+}
 </style>
 </head>
 
 <body>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Přepnout tmavý režim">🌙</button>
 
 <div class="container">
 
@@ -110,8 +176,10 @@ img{
 
 <div class="card">
 
-<button onclick="toggleSettings()">⚙️ Nastavení</button>
-<button onclick="restart()">🔄 Restart</button>
+<div class="top-buttons">
+    <button onclick="toggleSettings()">⚙️ Nastavení</button>
+    <button onclick="restart()">🔄 Restart</button>
+</div>
 
 <div id="settings" style="display:none; text-align:left;">
 
@@ -155,6 +223,24 @@ img{
 </div>
 
 <script>
+
+// ===== DARK MODE =====
+function toggleDarkMode(){
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    updateDarkModeButton();
+}
+
+function updateDarkModeButton(){
+    const btn = document.querySelector('.dark-mode-toggle');
+    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+}
+
+// Load dark mode preference on page load
+if(localStorage.getItem('darkMode') === 'true'){
+    document.body.classList.add('dark-mode');
+    updateDarkModeButton();
+}
 
 // ===== NORMALIZE =====
 function normalize(t){
