@@ -169,22 +169,24 @@ button{
 .org-list.open{
     display:block;
 }
-
 .org-list::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
-
 .org-list::-webkit-scrollbar-track {
     background: var(--category-bg);
 }
-
 .org-list::-webkit-scrollbar-thumb {
-    background: var(--card-border);
+    background: #ccc;
     border-radius: 5px;
 }
-
+body.dark-mode .org-list::-webkit-scrollbar-thumb {
+    background: #555;
+}
 .org-list::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+body.dark-mode .org-list::-webkit-scrollbar-thumb:hover {
     background: #777;
 }
 
