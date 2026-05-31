@@ -162,29 +162,13 @@ button{
     display:none;
     max-height:400px;
     overflow-y:auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--card-border) var(--category-bg);
+    scrollbar-width: none;
 }
-
 .org-list.open{
     display:block;
 }
 .org-list::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-.org-list::-webkit-scrollbar-track {
-    background: var(--category-bg);
-}
-.org-list::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 5px;
-}
-body.dark-mode .org-list::-webkit-scrollbar-thumb {
-    background: #555;
-}
-.org-list::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
+    display: none;
 }
 body.dark-mode .org-list::-webkit-scrollbar-thumb:hover {
     background: #777;
