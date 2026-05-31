@@ -124,18 +124,54 @@ button{
     align-items:center;
     font-weight:bold;
     cursor:pointer;
+    user-select:none;
+}
+
+.category-header:hover{
+    opacity:0.8;
+}
+
+.arrow{
+    display:inline-block;
+    transition:transform 0.3s;
+    font-size:18px;
+    margin-right:10px;
+}
+
+.arrow.open{
+    transform:rotate(90deg);
+}
+
+.category-checkbox{
+    cursor:pointer;
+    width:auto;
+    margin:0;
+    padding:0;
 }
 
 .org-list{
     margin-top:8px;
-    padding-left:10px;
+    padding-left:20px;
+    display:none;
+    max-height:400px;
+    overflow-y:auto;
+}
+
+.org-list.open{
+    display:block;
 }
 
 .org-item{
     display:flex;
-    justify-content:space-between;
-    padding:3px 0;
+    align-items:center;
+    padding:5px 0;
     font-size:14px;
+}
+
+.org-item input{
+    width:auto;
+    margin:0 8px 0 0;
+    padding:0;
 }
 
 img{
@@ -201,7 +237,7 @@ img{
 
 <div class="card">
 
-<h2>Poznáváčka</h2>
+<h2>Познáváčka</h2>
 
 <img id="img">
 
@@ -381,19 +417,21 @@ function buildSelector(){
         let box = document.createElement("div");
         box.className = "category-box";
 
-        box.innerHTML = `
-        <div class="category-header">
-            <span onclick="toggleCategory(this)">${cat}</span>
-            <input type="checkbox" checked onchange="toggleGroup(this,'${cat}')">
-        </div>
+        let itemsHtml = groups[cat].map(o=>`
+            <div class="org-item">
+                <input type="checkbox" value="${o.name}" checked>
+                <span>${o.name}</span>
+            </div>
+        `).join("");
 
+        box.innerHTML = `
+        <div class="category-header" onclick="toggleCategoryList(event)">
+            <span class="arrow">▶</span>
+            <span class="category-name">${cat}</span>
+            <input type="checkbox" class="category-checkbox" checked onchange="toggleGroup(event)">
+        </div>
         <div class="org-list">
-            ${groups[cat].map(o=>`
-                <div class="org-item">
-                    <span>${o.name}</span>
-                    <input type="checkbox" value="${o.name}" checked>
-                </div>
-            `).join("")}
+            ${itemsHtml}
         </div>
         `;
 
@@ -402,15 +440,22 @@ function buildSelector(){
 }
 
 // ===== CATEGORY TOGGLE =====
-function toggleGroup(master){
-    let box = master.closest(".category-box");
-    let checks = box.querySelectorAll("input[type=checkbox]:not(:first-child)");
-    checks.forEach(c=>c.checked = master.checked);
+function toggleCategoryList(event){
+    // Only toggle if clicking on arrow or category name, not the checkbox
+    if(event.target.closest('.category-checkbox')) return;
+    
+    let box = event.currentTarget.closest(".category-box");
+    let list = box.querySelector(".org-list");
+    let arrow = box.querySelector(".arrow");
+    
+    list.classList.toggle("open");
+    arrow.classList.toggle("open");
 }
 
-function toggleCategory(el){
-    let list = el.closest(".category-box").querySelector(".org-list");
-    list.style.display = (list.style.display === "none") ? "block" : "none";
+function toggleGroup(event){
+    let box = event.currentTarget.closest(".category-box");
+    let checks = box.querySelectorAll(".org-list input[type=checkbox]");
+    checks.forEach(c=>c.checked = event.currentTarget.checked);
 }
 
 // ===== APPLY =====
