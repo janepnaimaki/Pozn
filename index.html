@@ -201,29 +201,37 @@ img{
 }
 /* ===== DARK MODE SCROLLBARS ===== */
 
-/* Chrome, Edge, Opera */
-::-webkit-scrollbar {
+body::-webkit-scrollbar,
+.org-list::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track,
+.org-list::-webkit-scrollbar-track {
     background: var(--bg-color);
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb,
+.org-list::-webkit-scrollbar-thumb {
     background: var(--card-border);
     border-radius: 5px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover,
+.org-list::-webkit-scrollbar-thumb:hover {
     background: #777;
 }
 
 /* Firefox */
-* {
+html {
     scrollbar-width: thin;
     scrollbar-color: var(--card-border) var(--bg-color);
+}
+
+.org-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-border) var(--category-bg);
 }
 </style>
 </head>
