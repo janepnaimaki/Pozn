@@ -199,6 +199,32 @@ img{
 .dark-mode-toggle:hover{
     transform:scale(1.1);
 }
+/* ===== DARK MODE SCROLLBARS ===== */
+
+/* Chrome, Edge, Opera */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-border) var(--bg-color);
+}
 </style>
 </head>
 
