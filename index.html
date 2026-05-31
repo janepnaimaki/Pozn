@@ -36,7 +36,6 @@ body{
     transition: background 0.3s, color 0.3s;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    overflow: hidden;
 }
 
 body::-webkit-scrollbar {
@@ -162,15 +161,29 @@ button{
     display:none;
     max-height:400px;
     overflow-y:auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-border) var(--category-bg);
 }
+
 .org-list.open{
     display:block;
 }
+
 .org-list::-webkit-scrollbar {
-    display: none;
+    width: 10px;
+    height: 10px;
 }
-body.dark-mode .org-list::-webkit-scrollbar-thumb:hover {
+
+.org-list::-webkit-scrollbar-track {
+    background: var(--category-bg);
+}
+
+.org-list::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 5px;
+}
+
+.org-list::-webkit-scrollbar-thumb:hover {
     background: #777;
 }
 
