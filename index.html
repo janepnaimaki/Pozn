@@ -545,7 +545,11 @@ function updateScore(){
 // START
 buildSelector();
 applySettings();
-
+document.getElementById("answer").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        check();
+    }
+});
 </script>
 
 </body>
